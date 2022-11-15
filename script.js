@@ -5,6 +5,8 @@ const input_x = document.querySelector("#x-input")
 const input_y = document.querySelector("#y-input")
 const input_z = document.querySelector("#z-input")
 
+const focal_length = 500
+
 const canvas_size = 600
 const canvas_background = "#ff0000"
 
@@ -22,9 +24,9 @@ function changeSpeed() {
 }
 
 let angularSpeed = {
-  x: 1,
-  y: 1,
-  z: 1
+  x: 0,
+  y: 0,
+  z: 0
 }
 
 function calcMatrix(matrix_1, matrix_2) {
@@ -53,7 +55,7 @@ function calcMatrix(matrix_1, matrix_2) {
   return total
 }
 
-const vertexMap = [
+let vertexMap = [
   {
     x: -100,
     y: -100,
@@ -96,6 +98,8 @@ const vertexMap = [
     z: -100
   },
 ]
+
+let projectedMap = []
 
 const linesConection = [
   [0, 1],
@@ -132,34 +136,53 @@ function getRad(angularSpeed) {
   return angularSpeed * (Math.PI/180)
 }
 
+function calc() {
+
+
+  projectedMap = []
+  for(vertex of vertexMap) {
+    let x_projected = (focal_length * vertex.x) / (focal_length + vertex.z)
+    let y_projected = (focal_length * vertex.y) / (focal_length + vertex.z)
+    projectedMap.push({
+      x: x_projected,
+      y: y_projected
+    })
+  }
+
+  rotateX(getRad(angularSpeed.x))
+  rotateY(getRad(angularSpeed.y))
+  rotateZ(getRad(angularSpeed.z))
+}
+
 function draw() {
   
   clear()
   
 
   for(vertex of linesConection) {
-    let x1 = vertexMap[vertex[0]].x
-    let y1 = vertexMap[vertex[0]].y
-    let x2 = vertexMap[vertex[1]].x
-    let y2 = vertexMap[vertex[1]].y
+    let x1 = projectedMap[vertex[0]].x
+    let y1 = projectedMap[vertex[0]].y
+    let x2 = projectedMap[vertex[1]].x
+    let y2 = projectedMap[vertex[1]].y
 
     drawLine(x1, y1, x2, y2)
   }
-  for(vertex of vertexMap) {
+
+  for(vertex of projectedMap) {
     drawPoint(vertex.x, vertex.y)
   }
 }
-draw()
 
-function update() {
-  rotateZ(getRad(angularSpeed.z))
-  rotateX(getRad(angularSpeed.x))
-  rotateY(getRad(angularSpeed.y))
+
+function runFrame() {
+  calc()
+  draw()
 }
 
+runFrame()
+
 setInterval(() => {
-  update()
-  draw()
+  runFrame()
 }, 1000/30);
 
 function getMatrixX(angle) {
@@ -188,34 +211,34 @@ function getMatrixZ(angle) {
 
 function rotateX(angle) {
   let matrix_1 = getMatrixX(angle)
-  for(vertex of vertexMap) {
-    let matrix_2 = [vertex.x, vertex.y, vertex.z]
+  for(vertex in vertexMap) {
+    let matrix_2 = [vertexMap[vertex].x, vertexMap[vertex].y, vertexMap[vertex].z]
     let rotated = calcMatrix(matrix_1, matrix_2)
-    vertex.x = rotated[0]
-    vertex.y = rotated[1]
-    vertex.z = rotated[2]
+    vertexMap[vertex].x = rotated[0]
+    vertexMap[vertex].y = rotated[1]
+    vertexMap[vertex].z = rotated[2]
   }
 }
 
 function rotateY(angle) {
   let matrix_1 = getMatrixY(angle)
-  for(vertex of vertexMap) {
-    let matrix_2 = [vertex.x, vertex.y, vertex.z]
+  for(vertex in vertexMap) {
+    let matrix_2 = [vertexMap[vertex].x, vertexMap[vertex].y, vertexMap[vertex].z]
     let rotated = calcMatrix(matrix_1, matrix_2)
-    vertex.x = rotated[0]
-    vertex.y = rotated[1]
-    vertex.z = rotated[2]
+    vertexMap[vertex].x = rotated[0]
+    vertexMap[vertex].y = rotated[1]
+    vertexMap[vertex].z = rotated[2]
   }
 }
 
 function rotateZ(angle) {
   let matrix_1 = getMatrixZ(angle)
-  for(vertex of vertexMap) {
-    let matrix_2 = [vertex.x, vertex.y, vertex.z]
+  for(vertex in vertexMap) {
+    let matrix_2 = [vertexMap[vertex].x, vertexMap[vertex].y, vertexMap[vertex].z]
     let rotated = calcMatrix(matrix_1, matrix_2)
-    vertex.x = rotated[0]
-    vertex.y = rotated[1]
-    vertex.z = rotated[2]
+    vertexMap[vertex].x = rotated[0]
+    vertexMap[vertex].y = rotated[1]
+    vertexMap[vertex].z = rotated[2]
   }
 }
 
