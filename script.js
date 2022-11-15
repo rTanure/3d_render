@@ -23,6 +23,16 @@ function changeSpeed() {
   angularSpeed.z = input_z.value
 }
 
+function resetSpeed() {
+  angularSpeed.x = 0
+  angularSpeed.y = 0
+  angularSpeed.z = 0
+
+  input_x.value = 0
+  input_y.value = 0
+  input_z.value = 0
+}
+
 let angularSpeed = {
   x: 0,
   y: 0,

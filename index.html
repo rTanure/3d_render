@@ -11,11 +11,11 @@
   <div class="content">
     <canvas></canvas>
     <span>x</span>
-    <input type="range" min="0" max="10" id="x-input" step="0.1" oninput="changeSpeed()">
+    <input type="range" min="-10" max="10" id="x-input" step="0.1" oninput="changeSpeed()" onmouseup="resetSpeed()">
     <span>y</span>
-    <input type="range" min="0" max="10" id="y-input" step="0.1" oninput="changeSpeed()">
+    <input type="range" min="-10" max="10" id="y-input" step="0.1" oninput="changeSpeed()" onmouseup="resetSpeed()">
     <span>z</span>
-    <input type="range" min="0" max="10" id="z-input" step="0.1" oninput="changeSpeed()">
+    <input type="range" min="-10" max="10" id="z-input" step="0.1" oninput="changeSpeed()" onmouseup="resetSpeed()">
   </div>
   
   <script src="script.js"></script>
